@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div class="row text-center">
-      <h3>Clicked: {{ $store.state.results }} </h3>
+      <h3>Results: {{ $store.state.results }} </h3>
       <button class="btn btn-success" @click="search">Search</button>
     </div>
   </div>
