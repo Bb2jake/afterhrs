@@ -1,16 +1,15 @@
 <template>
   <div class="container">
     <div class="row text-center">
-      <h3>Results: {{ $store.state.results }} </h3>
-      <form @submit.prevent="search">
+      <form v-on:submit.prevent="searchDrinks">
         <input type="text" placeholder="Search for a drink..." v-model="query">
-        <button class="btn btn-success" type="submit">Search</button>
+        <button class="btn" type="submit">Search</button>
       </form>
+
     </div>
   </div>
 </template>
 <script>
-  import { mapGetters, mapActions } from 'vuex'
 
   export default {
     name: 'alcohol',
@@ -19,12 +18,16 @@
         query: ''
       }
     },
-    computed: mapGetters([
-    ]),
-    methods: {
-      search: function () {
-        this.store.dispatch('search', this.query)
+    computed: {
+      results() {
+        this.$store.state.results
+        console.log(this.$store.state.results)
       }
-    }
-  }
+    },
+    methods: {
+			searchDrinks() {
+					this.$store.dispatch('search', this.query.replace(/\s+/g, '-').toLowerCase());
+			}
+		},
+}
 </script>

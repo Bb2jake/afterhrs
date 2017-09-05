@@ -1,41 +1,33 @@
-import Vuex from 'vuex'
-import Vue from 'vue'
+import vue from 'vue'
+import vuex from 'vuex'
 import $ from 'jquery'
 
+vue.use(vuex)
 
-Vue.use(Vuex)
-
-
-const state = {
-    results: []
-}
-
-const mutations = {
-    setResults(state, results) {
-        state.results = JSON.parse(results)
-    }
-}
-const actions = {
-    search({ commit, dispatch }, query ) {
-        var getterUrl = '//bcw-getter.herokuapp.com/?url=';
-        var apiBaseUrl = 'https://addb.absolutdrinks.com/drinks/';
-        var apiKey = '/?apiKey=0ff6ee2b1fef44fab626292fb8348cb5';
-        var appId = '?appId=14689';
-        var requestString = getterUrl + encodeURIComponent(apiBaseUrl + query + apiKey);
-        $.get(requestString).then(data => {
-            commit('setResults', data)
+var store = new vuex.Store({
+    state: {
+        results: []
+    },
+    mutations: {
+        setResults(state, results) {
+            state.results = JSON.parse(results)
             console.log(state.results)
-        }).catch((error => {
-                console.log(error.statusText)
-            }))
+        }
+    },
+    actions: {
+        search({ commit, dispatch }, query) {
+            var getterUrl = '//bcw-getter.herokuapp.com/?url=';
+            var apiBaseUrl = 'https://addb.absolutdrinks.com/drinks/';
+            var apiKey = '/?apiKey=0ff6ee2b1fef44fab626292fb8348cb5';
+            var appId = '?appId=14689';
+            var requestString = getterUrl + encodeURIComponent(apiBaseUrl + query + apiKey);
+            $.get(requestString).then(data => {
+                commit('setResults', data)
+            })
+        }
     }
-}
-const getters = {
-
-}
-export default new Vuex.Store({
-    state,
-    getters,
-    actions,
-    mutations
 })
+
+export default store
+
+
