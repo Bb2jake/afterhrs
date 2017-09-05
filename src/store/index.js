@@ -10,8 +10,13 @@ var store = new vuex.Store({
     },
     mutations: {
         setResults(state, results) {
-            state.results = JSON.parse(results)
+            let parsedResult = Object.freeze(JSON.parse(results))
+            let cleanResult = Object.freeze(parsedResult.result)
+            state.results = cleanResult
             console.log(state.results)
+        },
+        resetResults(state) {
+            state.results = []
         }
     },
     actions: {
@@ -24,6 +29,9 @@ var store = new vuex.Store({
             $.get(requestString).then(data => {
                 commit('setResults', data)
             })
+        },
+        clearResults({commit}){
+            commit('resetResults')
         }
     }
 })
