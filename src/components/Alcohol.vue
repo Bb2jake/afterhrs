@@ -2,6 +2,7 @@
   <div class="container">
     <div class="row text-center">
       <h3>Find a Drink</h3>
+      
       <form v-on:submit.prevent="searchDrinks">
         <input type="text" placeholder="Search for a drink..." v-model="query">
         <v-btn slot="activator" class="btn" type="submit">Search</v-btn>
