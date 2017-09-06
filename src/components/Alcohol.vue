@@ -1,6 +1,7 @@
 <template>
   <div class="container">
     <div class="row text-center">
+      <h3>Find a Drink</h3>
       <form v-on:submit.prevent="searchDrinks">
         <input type="text" placeholder="Search for a drink..." v-model="query">
         <v-btn slot="activator" class="btn" type="submit">Search</v-btn>
@@ -13,12 +14,13 @@
               <v-layout row>
                 <v-flex xs7>
                   <div>
-                    <div class="headline"> {{ results[0].name }} </div>
-                    <div> {{ results[0].occasions[0].text }} </div>
+                    <h4>{{ results[0].name }}</h4>
+                    <p> {{ results[0].occasions[0].text }} </p>
+                    <!-- <div> {{ resultImgUrl }} </div> -->
                   </div>
                 </v-flex>
                 <v-flex xs5>
-                  <v-card-media src="http://assets.absolutdrinks.com/drinks/transparent-background-white/soft-shadow/floor-reflection/absolut-cosmopolitan.png"
+                  <v-card-media :src="resultImgUrl"
                     height="125px" contain></v-card-media>
                 </v-flex>
               </v-layout>
@@ -31,6 +33,7 @@
   </div>
 </template>
 <script>
+
   export default {
     name: 'alcohol',
     data() {
@@ -42,6 +45,10 @@
       results() {
         return Object.freeze(this.$store.state.results)
         console.log(Object.Freeze(this.$store.state.results))
+      },
+      resultImgUrl() {
+        return this.$store.state.resultImgUrl
+        console.log(this.$store.state.resultImgUrl)
       }
     },
     methods: {

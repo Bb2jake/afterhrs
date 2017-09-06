@@ -6,17 +6,25 @@ vue.use(vuex)
 
 var store = new vuex.Store({
     state: {
-        results: []
+        results: [],
+        resultImgUrl: ''
     },
     mutations: {
         setResults(state, results) {
             let parsedResult = Object.freeze(JSON.parse(results))
             let cleanResult = Object.freeze(parsedResult.result)
+            let baseUrl = 'http://assets.absolutdrinks.com/drinks/transparent-background-white/soft-shadow/floor-reflection/'
+            let identifier = cleanResult[0].id
+            let urlEnd = '.png'
+            let imgUrl = baseUrl + identifier + urlEnd
+            state.resultImgUrl = imgUrl
             state.results = cleanResult
+            
             console.log(state.results)
         },
         resetResults(state) {
             state.results = []
+            state.resultImgUrl = ''
         }
     },
     actions: {
@@ -30,7 +38,7 @@ var store = new vuex.Store({
                 commit('setResults', data)
             })
         },
-        clearResults({commit}){
+        clearResults({ commit }) {
             commit('resetResults')
         }
     }
