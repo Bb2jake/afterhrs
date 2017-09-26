@@ -1,6 +1,8 @@
 import vue from 'vue'
 import vuex from 'vuex'
 import $ from 'jquery'
+import axios from 'axios'
+import router from '../router'
 
 vue.use(vuex)
 
@@ -8,36 +10,57 @@ vue.use(vuex)
 //     appId: 14689,
 //     host: window.location.host
 // })
+var production = !window.location.host.includes('localhost');
+var baseUrl = production ? '//gridworksgames.herokuapp.com/' : '//localhost:3000/';
 
+let api = axios.create({
+    baseURL: baseUrl + 'api/',
+    timeout: 4000,
+    withCredentials: true
+})
+
+let auth = axios.create({
+    baseURL: baseUrl,
+    timeout: 4000,
+    withCredentials: true
+})
 
 var store = new vuex.Store({
     state: {
+        activeUser: {},
+        loggedIn: null,
         results: [],
         resultImgUrl: ''
+
     },
     mutations: {
-        setResults(state, results) {
-            // let parsedResult = Object.freeze(JSON.parse(results))
-            // let cleanResult = Object.freeze(parsedResult.result)
-            // let baseUrl = 'http://assets.absolutdrinks.com/drinks/transparent-background-white/soft-shadow/floor-reflection/'
-            // let identifier = cleanResult[0].id
-            // let urlEnd = '.png'
-            // let imgUrl = baseUrl + identifier + urlEnd
-            // state.resultImgUrl = imgUrl
-            // state.results = cleanResult
-            state.results = JSON.parse(results || '{result: []}').result
-            // console.log(state.results)
+        setUser(state, data) {
+            state.activeGames = data.gamesPlayed
+            state.activeWins = data.wins
+            state.activeUser = data || {}
         },
-        resetResults(state) {
+
+        setLoggedIn(state, data) {
+            state.loggedIn = data
+        },
+
+        setBoard(state, data) {
+            state.leaderBoard = data
+        },
+
+        handleError(state, err) {
+            state.error = err
+        },
+        setResults(state, results) {
+            state.results = JSON.parse(results || '{result: []}').result
+        },
+        clearResults(state) {
             state.results = []
             state.resultImgUrl = ''
         }
     },
     actions: {
         search({ commit, dispatch }, query) {
-            // addb.drinks().quickSearch(query, (data) => {
-            //     commit('SetResults', data)
-            // })
             var getterUrl = '//bcw-getter.herokuapp.com/?url=';
             var apiBaseUrl = 'https://addb.absolutdrinks.com/quickSearch/drinks/';
             var apiKey = '/?apiKey=0ff6ee2b1fef44fab626292fb8348cb5';
@@ -48,10 +71,88 @@ var store = new vuex.Store({
             })
         },
         clearResults({ commit }) {
-            commit('resetResults')
+            commit('clearResults')
+        },
+
+        setUser(data) {
+            commit('setUser', data)
+        },
+
+
+        updateUser({ commit, dispatch }, user) {
+            api.put('userwins/' + user._id, user)
+                .then(res => {
+                    console.log('updatedUser', res)
+                    dispatch('authenticate')
+                    //commit('setUser', res.data.data)
+                })
+                .catch(err => {
+                    commit('handleError', err)
+                })
+        },
+
+        register({ commit, dispatch }, accountUser) {
+            auth.post('register', accountUser)
+                .then(res => {
+                    commit('setUser', res.data.data)
+                    commit('setLoggedIn', true)
+                    if (!res.data.data) {
+                        router.push('/Home');
+                    }
+                })
+                .catch(err => {
+                    commit('handleError', err)
+                })
+        },
+
+
+        login({ commit, dispatch }, accountUser) {
+            auth.post('login', accountUser)
+                .then(res => {
+                    commit('setUser', res.data.data)
+                    commit('setLoggedIn', true)
+                    if (!res.data.data) {
+                        router.push('/Home');
+                    }
+                })
+                .catch(err => {
+                    commit('handleError', err)
+                })
+        },
+
+        logout({ commit, dispatch }, credentials) {
+            auth.delete('/logout')
+                .then(res => {
+                    commit('setLoggedIn', false)
+                }).catch(err => {
+                    commit('handleError', err)
+                })
+        },
+
+        authenticate({ commit, dispatch }) {
+            auth('/authenticate')
+                .then(res => {
+                    if (res.data.data._id) {
+                        commit('setLoggedIn', true)
+                        commit('setUser', res.data.data)
+                    } else {
+                        commit('setLoggedIn', false)
+                        console.log('No session found!')
+                        router.push('/');
+                    }
+                }).catch(err => {
+                    commit('handleError', err)
+                    commit('setLoggedIn', false)
+                    router.push('/');
+                })
+        },
+
+        handleError({ commit, dispatch }, err) {
+            commit('handleError', err)
         }
     }
 })
+
 
 export default store
 

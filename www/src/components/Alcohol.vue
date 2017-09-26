@@ -2,9 +2,6 @@
   <div class="container">
     <div class="row text-center">
 
-
-
-      
       <h3>Find a Drink</h3>
 
       <form v-on:submit.prevent="searchDrinks">
