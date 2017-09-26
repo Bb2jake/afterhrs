@@ -1,65 +1,133 @@
 <template>
   <div class="profile">
-    <v-flex xs12>
-    <v-flex xs5 offset-xs1>
+    <v-layout v-if="loggedIn" row wrap>
+      <v-flex xs12 offset-sm1 sm5>
 
-        <h1 v-if="loggedIn">{{ msg }}</h1>
+        <v-card dark class="mb-3">
+          <v-container fluid grid-list-lg>
+            <v-layout row>
+              <v-flex xs5>
+                <v-card-media height="18vh" contain>
+                  <v-avatar size="125">
+                    <img src="https://i.imgur.com/MRc9ibg.jpg" alt="Profile Pic">
+                  </v-avatar>
+                </v-card-media>
+              </v-flex>
+              <v-flex xs7>
+                <div>
+                  <div class="headline pink--text text-darken-2"><strong>{{ activeUser.username }}</strong></div>
+                  <div>{{ activeUser.firstname }} {{ activeUser.lastname }}</div>
+                  <v-divider></v-divider>
+                  <div class="grey--text">Drunk Level: {{ activeUser.drunkLevel }}</div>
+                </div>
+              </v-flex>
+            </v-layout>
+            <v-divider></v-divider>
+            <v-layout row>
+              <v-flex xs6>
+                <div class="grey--text">Friends: {{ activeUser.friends.length }}</div>
+              </v-flex>
+              <v-flex xs6>
+                <div class="grey--text">Current Parties: {{ activeUser.parties.length }}</div>
+              </v-flex>
+            </v-layout>
+            <v-divider></v-divider>
+          </v-container>
+          <v-btn flat small @click.prevent="logUserOut()">Log Out</v-btn>
+        </v-card>
+
+        <v-card dark>
+          <v-container fluid grid-list-lg>
+            <v-layout row>
+              <v-flex xs12>
+                <div>Friends</div>
+              </v-flex>
+            </v-layout>
+            <v-divider></v-divider>
+            <v-layout row>
+              <v-flex xs12>
+
+                <v-list two-line>
+                  <template>
+                    <v-list-tile avatar @click="" download>
+                      <v-list-tile-avatar>
+                        <img src="http://www.ala-access.com/s/wp-content/uploads/2016/01/analyst-placeholder-avatar.png">
+                      </v-list-tile-avatar>
+                      <v-list-tile-content>
+                        <v-list-tile-title>Username</v-list-tile-title>
+                        <v-list-tile-sub-title>First, Last</v-list-tile-sub-title>
+                      </v-list-tile-content>
+                    </v-list-tile>
+                  </template>
+                </v-list>
+
+              </v-flex>
+            </v-layout>
+          </v-container>
+
+        </v-card>
+
+      </v-flex>
+
+
+
+
+
+
+
+      <v-flex xs12 sm6 offset-sm3>
         <v-switch color="pink darken-2" v-if="!loggedIn" label="Log In/Register" v-model="showRegister"></v-switch>
-        
-    </v-flex>
-    <v-flex xs12 sm6 offset-sm3 class="profile-page">
-      
-
-      <form v-if="!showRegister && !loggedIn">
-        <h3>log in to <strong>after</strong>hrs</h3>
-        <v-text-field required type="text" placeholder="Username" v-model="accountUser.username"></v-text-field>
-        <v-text-field required type="password" placeholder="Password" v-model="accountUser.password"></v-text-field>
-        <v-btn class="pink darken-2" flat type="submit" @click="logUserIn()">Log Me In</v-btn>
-      </form>
 
 
-      <form v-if="showRegister && !loggedIn">
-        <!-- REGISTER -->
-        <h3>join the <strong>party</strong></h3>
-        <v-text-field required type="text" placeholder="First Name" v-model="newUser.firstname"></v-text-field>
-        <v-text-field required type="text" placeholder="Last Name" v-model="newUser.lastname"></v-text-field>
-        <!-- DATE OF BIRTH PICKER -->
-        <v-flex xs12 sm6>
-          <v-menu lazy :close-on-content-click="false" v-model="menu" transition="scale-transition" offset-y full-width :nudge-left="40"
-            max-width="290px">
-            <v-text-field required slot="activator" v-model="newUser.dob" placeholder="Date of Birth"></v-text-field>
-            <v-date-picker v-model="newUser.dob" no-title scrollable actions>
-              <template scope="{ save, cancel }">
-                <v-card-actions>
-                  <v-btn flat primary @click.native="cancel()">Cancel</v-btn>
-                  <v-btn flat primary @click.native="save()">Save</v-btn>
-                </v-card-actions>
-              </template>
-            </v-date-picker>
-          </v-menu>
-        </v-flex>
-        <!-- END DOB PICKER -->
-        I am a:
-        <v-select required v-bind:items="genders" v-model="newUser.gender" label="Select" single-line bottom></v-select>
-        <v-text-field required type="text" placeholder="City" v-model="newUser.city"></v-text-field>
-        <v-select required v-bind:items="continentalStates" v-model="newUser.continentalState" label="State" single-line bottom></v-select>
-        <v-text-field required type="text" placeholder="ZIP" v-model="newUser.zipCode"></v-text-field>
-        <v-divider></v-divider>
-        <p>By registering for this site, I hereby certify that I am at least 21 years of age or older. I also agree to let "afterhrs"
-          use the personal information submitted during registration for purposes related directly to the functionality of
-          the application.</p>
-        <v-switch color="pink darken-2" label="I hereby certify and agree" v-model="newUser.agreement"></v-switch>
-        <v-divider></v-divider>
-        <v-text-field required type="text" placeholder="Username" v-model="newUser.username"></v-text-field>
-        <v-text-field required type="text" placeholder="email" v-model="newUser.email"></v-text-field>
-        <v-text-field required type="password" placeholder="Password" v-model="newUser.password"></v-text-field>
-        <v-text-field required type="password" placeholder="Confirm Password" v-model="confirmPassword"></v-text-field>
-        <v-btn class="pink darken-2" flat type="submit" @click="registerNewUser()">Register Me</v-btn>
-      </form>
+        <form v-if="!showRegister && !loggedIn">
+          <h3>log in to <strong>after</strong>hrs</h3>
+          <v-text-field required type="text" placeholder="Username" v-model="accountUser.username"></v-text-field>
+          <v-text-field required type="password" placeholder="Password" v-model="accountUser.password"></v-text-field>
+          <v-btn class="pink darken-2" flat type="submit" @click="logUserIn()">Log Me In</v-btn>
+        </form>
 
-      <v-btn class="pink darken-2" v-if="loggedIn" flat type="submit" @click="logUserOut()">Log Out</v-btn>
-    </v-flex>
-    </v-flex>
+
+        <form v-if="showRegister && !loggedIn">
+          <!-- REGISTER -->
+          <h3>join the <strong>party</strong></h3>
+          <v-text-field required type="text" placeholder="First Name" v-model="newUser.firstname"></v-text-field>
+          <v-text-field required type="text" placeholder="Last Name" v-model="newUser.lastname"></v-text-field>
+          <!-- DATE OF BIRTH PICKER -->
+          <v-flex xs12 sm6>
+            <v-menu lazy :close-on-content-click="false" v-model="menu" transition="scale-transition" offset-y full-width :nudge-left="40"
+              max-width="290px">
+              <v-text-field required slot="activator" v-model="newUser.dob" placeholder="Date of Birth"></v-text-field>
+              <v-date-picker v-model="newUser.dob" no-title scrollable actions>
+                <template scope="{ save, cancel }">
+                  <v-card-actions>
+                    <v-btn flat primary @click.native="cancel()">Cancel</v-btn>
+                    <v-btn flat primary @click.native="save()">Save</v-btn>
+                  </v-card-actions>
+                </template>
+              </v-date-picker>
+            </v-menu>
+          </v-flex>
+          <!-- END DOB PICKER -->
+          I am a:
+          <v-select required v-bind:items="genders" v-model="newUser.gender" label="Select" single-line bottom></v-select>
+          <v-text-field required type="text" placeholder="City" v-model="newUser.city"></v-text-field>
+          <v-select required v-bind:items="continentalStates" v-model="newUser.continentalState" label="State" single-line bottom></v-select>
+          <v-text-field required type="text" placeholder="ZIP" v-model="newUser.zipCode"></v-text-field>
+          <v-divider></v-divider>
+          <p>By registering for this site, I hereby certify that I am at least 21 years of age or older. I also agree to let
+            "afterhrs" use the personal information submitted during registration for purposes related directly to the functionality
+            of the application.</p>
+          <v-switch color="pink darken-2" label="I hereby certify and agree" v-model="newUser.agreement"></v-switch>
+          <v-divider></v-divider>
+          <v-text-field required type="text" placeholder="Username" v-model="newUser.username"></v-text-field>
+          <v-text-field required type="text" placeholder="email" v-model="newUser.email"></v-text-field>
+          <v-text-field required type="password" placeholder="Password" v-model="newUser.password"></v-text-field>
+          <v-text-field required type="password" placeholder="Confirm Password" v-model="confirmPassword"></v-text-field>
+          <v-btn class="pink darken-2" flat type="submit" @click="registerNewUser()">Register Me</v-btn>
+        </form>
+
+      </v-flex>
+    </v-layout>
   </div>
 </template>
 
@@ -149,6 +217,17 @@
           username: '',
           email: '',
           password: '',
+          messages: [],
+          friends: [],
+          parties: [],
+          bars: [],
+          liquorStores: [],
+          drinks: [],
+          isDrinking: {},
+          status: '',
+          drunkLevel: 0,
+          preferences: {},
+          activityFeed: [],
           agreement: false,
           foundingMember: false
         },
@@ -160,21 +239,24 @@
     },
     computed: {
       loggedIn() {
-        return this.$store.state.loggedIn
+        return this.$store.state.loggedIn;
+      },
+      activeUser() {
+        return this.$store.state.activeUser;
       },
       currentDate() {
         Date.prototype.yyyymmdd = function () {
-        var mm = this.getMonth() + 1; // getMonth() is zero-based
-        var dd = this.getDate();
+          var mm = this.getMonth() + 1; // getMonth() is zero-based
+          var dd = this.getDate();
 
-        return [this.getFullYear(),
-        (mm > 9 ? '' : '0') + mm,
-        (dd > 9 ? '' : '0') + dd
-        ].join('');
-      };
+          return [this.getFullYear(),
+          (mm > 9 ? '' : '0') + mm,
+          (dd > 9 ? '' : '0') + dd
+          ].join('');
+        };
 
-      var date = new Date();
-      return date.yyyymmdd();
+        var date = new Date();
+        return date.yyyymmdd();
       }
     },
     methods: {
@@ -184,18 +266,18 @@
       },
 
       logUserIn() {
-        var user = { user: this.accountUser.name, password: this.accountUser.password }
+        var user = { username: this.accountUser.username, password: this.accountUser.password }
         this.$store.dispatch('login', user).then(() => {
           this.resetFields()
         })
       },
 
       registerNewUser() {
-        if (Math.floor((this.currentDate - this.newUser.dob.replace(/-/g, ""))*.0001) >= 21) {
+        if (Math.floor((this.currentDate - this.newUser.dob.replace(/-/g, "")) * .0001) >= 21) {
           if (this.newUser.agreement) {
             if (this.newUser.password === this.confirmPassword) {
               this.$store.dispatch('register', this.newUser).then(() => {
-                  this.resetFields()
+                this.resetFields()
               })
             } else {
               alert("Passwords do not match, please try again.")

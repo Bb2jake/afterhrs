@@ -16,8 +16,19 @@ let schema = new Schema({
   continentalState: { type: String, required: true },
   zipCode: { type: String, required: true },
   username: { type: String, required: true },
-  agreement: { type: Boolean, required: true},
-  foundingMember: { type: Boolean, required: true, default: false}
+  agreement: { type: Boolean, required: true },
+  foundingMember: { type: Boolean, required: true, default: false },
+  messages: { type: Array, default: [] },
+  friends: { type: Array, default: [] },
+  parties: { type: Array, default: [] },
+  bars: { type: Array, default: [] },
+  liquorStores: { type: Array, default: [] },
+  drinks: { type: Array, default: [] },
+  isDrinking: { type: Object, default: {} },
+  status: { type: String, default: '' },
+  drunkLevel: { type: Number, default: 0 },
+  preferences: { type: Object, default: {} },
+  activityFeed: { type: Array, default: [] }
 })
 
 
