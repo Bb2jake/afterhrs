@@ -1,10 +1,14 @@
 <template>
   <div class="container">
     <div class="row text-center">
-      <h3>Find a Drink</h3>
+
+
+
       
+      <h3>Find a Drink</h3>
+
       <form v-on:submit.prevent="searchDrinks">
-        <input type="text" placeholder="Search for a drink..." v-model="query">
+        <v-text-field type="text" placeholder="Search for a drink..." v-model="query"></v-text-field>
         <v-btn slot="activator" class="btn" type="submit">Search</v-btn>
       </form>
 
@@ -15,16 +19,17 @@
               <v-layout row>
                 <v-flex xs7>
                   <div>
-                    <h4>{{ results[0].name }}</h4>
-                    <p> {{ results[0].occasions[0].text }} </p>
+                    <h4>{{ result.name }}</h4>
+                    <!-- <p> {{ result.occasions }} </p> -->
                     <!-- <div> {{ resultImgUrl }} </div> -->
                   </div>
                 </v-flex>
                 <v-flex xs5>
-                  <v-card-media :src="resultImgUrl"
-                    height="125px" contain></v-card-media>
+                  <v-card-media :src="`http://assets.absolutdrinks.com/drinks/transparent-background-white/soft-shadow/floor-reflection/100x200/${result.id}.png`"
+                  height="125px" contain></v-card-media>
                 </v-flex>
               </v-layout>
+              <v-btn light><i class="material-icons">add</i>Add to My Drinks</v-btn>
             </v-container>
           </v-card>
         </v-flex>
