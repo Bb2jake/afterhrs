@@ -1,7 +1,7 @@
 {
-  "name": "gridworksgames-server",
+  "name": "afterhrs-server",
   "version": "1.0.0",
-  "description": "The server for gridworksgames",
+  "description": "The server for afterhrs",
   "main": "index.js",
   "scripts": {
     "debug": "node index.js",

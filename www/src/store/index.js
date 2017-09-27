@@ -11,7 +11,7 @@ vue.use(vuex)
 //     host: window.location.host
 // })
 var production = !window.location.host.includes('localhost');
-var baseUrl = production ? '//gridworksgames.herokuapp.com/' : '//localhost:3000/';
+var baseUrl = production ? '//afterhrs.herokuapp.com/' : '//localhost:3000/';
 
 let api = axios.create({
     baseURL: baseUrl + 'api/',
