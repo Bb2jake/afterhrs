@@ -28,9 +28,10 @@ let auth = axios.create({
 var store = new vuex.Store({
     state: {
         activeUser: {},
-        loggedIn: null,
+        loggedIn: false,
         results: [],
-        resultImgUrl: ''
+        resultImgUrl: '',
+        userSearchResults: []
 
     },
     mutations: {
@@ -57,6 +58,9 @@ var store = new vuex.Store({
         clearResults(state) {
             state.results = []
             state.resultImgUrl = ''
+        },
+        setUserSearchResults(state, data) {
+            state.userSearchResults = data.data.data
         }
     },
     actions: {
@@ -78,13 +82,31 @@ var store = new vuex.Store({
             commit('setUser', data)
         },
 
-
         updateUser({ commit, dispatch }, user) {
-            api.put('userwins/' + user._id, user)
+            api.put('users/' + user._id, user)
                 .then(res => {
                     console.log('updatedUser', res)
                     dispatch('authenticate')
-                    //commit('setUser', res.data.data)
+                })
+                .catch(err => {
+                    commit('handleError', err)
+                })
+        },
+        modifyFriendship({ commit, dispatch }, user) {
+            api.put('friends/' + user.request.Receiver, user.request)
+                .then(res => {
+                    console.log('updatedUser', res)
+                    dispatch('authenticate')
+                })
+                .catch(err => {
+                    commit('handleError', err)
+                })
+        },
+
+        searchUsers({ commit, dispatch }, query) {
+            api('users?querySelector=' + query.querySelector + '&input=' + query.input)
+                .then(res => {
+                    commit('setUserSearchResults', res)
                 })
                 .catch(err => {
                     commit('handleError', err)

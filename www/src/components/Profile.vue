@@ -1,13 +1,13 @@
 <template>
   <div class="profile">
-    <v-layout v-if="loggedIn" row wrap>
-      <v-flex xs12 offset-sm1 sm5>
+    <v-layout row wrap>
+      <v-flex v-if="loggedIn" xs12 offset-sm1 sm5>
 
-        <v-card dark class="mb-3">
+        <v-card dark class="mb-3 elevation-24">
           <v-container fluid grid-list-lg>
             <v-layout row>
               <v-flex xs5>
-                <v-card-media height="18vh" contain>
+                <v-card-media height="30vh" contain>
                   <v-avatar size="125">
                     <img src="https://i.imgur.com/MRc9ibg.jpg" alt="Profile Pic">
                   </v-avatar>
@@ -15,16 +15,20 @@
               </v-flex>
               <v-flex xs7>
                 <div>
-                  <div class="headline pink--text text-darken-2"><strong>{{ activeUser.username }}</strong></div>
+                  <div class="headline pink--text text--darken-2"><strong>{{ activeUser.username }}</strong></div>
                   <div>{{ activeUser.firstname }} {{ activeUser.lastname }}</div>
                   <v-divider></v-divider>
                   <div class="grey--text">Drunk Level: {{ activeUser.drunkLevel }}</div>
+                  <div v-if="activeUser.isDrinking">
+                    <img :src="`http://assets.absolutdrinks.com/drinks/transparent-background-white/soft-shadow/floor-reflection/75x150/${activeUser.isDrinking.id}.png`">
+                    <div class="grey--text">Drinking a {{ activeUser.isDrinking.name }} as of {{ Math.floor((currentTime - activeUser.isDrinking.timeConsumed)*.00001) }} min ago.</div>
+                  </div>
                 </div>
               </v-flex>
             </v-layout>
             <v-divider></v-divider>
             <v-layout row>
-              <v-flex xs6>
+              <v-flex xs6 >
                 <div class="grey--text">Friends: {{ activeUser.friends.length }}</div>
               </v-flex>
               <v-flex xs6>
@@ -36,7 +40,7 @@
           <v-btn flat small @click.prevent="logUserOut()">Log Out</v-btn>
         </v-card>
 
-        <v-card dark>
+        <v-card dark class="mb-3 elevation-24" v-if="activeUser.friends.length>0">
           <v-container fluid grid-list-lg>
             <v-layout row>
               <v-flex xs12>
@@ -68,18 +72,54 @@
         </v-card>
 
       </v-flex>
+      <v-flex v-if="loggedIn" xs12 sm4 offset-sm1 class="drinks-list">
+        <v-card dark class="elevation-24">
+          <v-container fluid grid-list-lg>
+            <v-layout row>
+              <v-flex xs12>
+                <div>My Drinks</div>
+              </v-flex>
+            </v-layout>
+            <v-divider></v-divider>
+            <v-layout row>
+              <v-flex xs12>
+                <v-list two-line>
+                  <template v-for="(drink, index) in activeUser.drinks">
+                    <v-list-tile avatar @click="" download>
+                      <v-list-tile-content>
+                        <v-list-tile-title>{{ drink.name }}</v-list-tile-title>
+                        <v-layout row>
+                          <v-btn icon small @click="removeDrink(index)" class="pink--text text--darken-2 btn">
+                            <v-icon>delete_forever</v-icon>
+                          </v-btn>
+                          <v-btn icon small class="blue--text text--darken-2 btn">
+                            <v-icon>reply</v-icon>
+                          </v-btn>
+                          <v-btn icon small @click="drinkOne(drink)" class="grey--text text--darken-2 btn">
+                            <v-icon>local_bar</v-icon>
+                          </v-btn>
+                        </v-layout>
+
+                      </v-list-tile-content>
+                      <v-list-tile>
+                        <img :src="`http://assets.absolutdrinks.com/drinks/transparent-background-white/soft-shadow/floor-reflection/50x100/${drink.id}.png`">
+                      </v-list-tile>
+                    </v-list-tile>
+                  </template>
+                </v-list>
+
+              </v-flex>
+            </v-layout>
+          </v-container>
+
+        </v-card>
+      </v-flex>
+
+      <v-flex v-if="!loggedIn" xs12 sm6 offset-sm3>
+        <v-switch color="pink darken-2" label="Log In/Register" v-model="showRegister"></v-switch>
 
 
-
-
-
-
-
-      <v-flex xs12 sm6 offset-sm3>
-        <v-switch color="pink darken-2" v-if="!loggedIn" label="Log In/Register" v-model="showRegister"></v-switch>
-
-
-        <form v-if="!showRegister && !loggedIn">
+        <form v-if="!showRegister">
           <h3>log in to <strong>after</strong>hrs</h3>
           <v-text-field required type="text" placeholder="Username" v-model="accountUser.username"></v-text-field>
           <v-text-field required type="password" placeholder="Password" v-model="accountUser.password"></v-text-field>
@@ -87,7 +127,7 @@
         </form>
 
 
-        <form v-if="showRegister && !loggedIn">
+        <form v-if="showRegister">
           <!-- REGISTER -->
           <h3>join the <strong>party</strong></h3>
           <v-text-field required type="text" placeholder="First Name" v-model="newUser.firstname"></v-text-field>
@@ -217,19 +257,7 @@
           username: '',
           email: '',
           password: '',
-          messages: [],
-          friends: [],
-          parties: [],
-          bars: [],
-          liquorStores: [],
-          drinks: [],
-          isDrinking: {},
-          status: '',
-          drunkLevel: 0,
-          preferences: {},
-          activityFeed: [],
-          agreement: false,
-          foundingMember: false
+          agreement: false
         },
         clipped: false,
         drawer: false,
@@ -240,6 +268,10 @@
     computed: {
       loggedIn() {
         return this.$store.state.loggedIn;
+      },
+      currentTime() {
+        var time = new Date().getTime();
+        return time;
       },
       activeUser() {
         return this.$store.state.activeUser;
@@ -309,8 +341,20 @@
         this.accountUser.name = ''
         this.accountUser.password = ''
       },
-
-    },
+      drinkOne(drink) {
+        var user = this.$store.state.activeUser;
+        var now = new Date().getTime();
+        drink.timeConsumed = now
+        user.isDrinking = drink;
+        user.drunkLevel++
+        this.$store.dispatch("updateUser", user);
+      },
+      removeDrink(index) {
+        var user = this.$store.state.activeUser;
+        user.drinks.splice(index, 1);
+        this.$store.dispatch("updateUser", user);
+      }
+    }
 
   }
 
@@ -318,5 +362,7 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-
+  .drinks-list {
+    height: 10vh;
+  }
 </style>

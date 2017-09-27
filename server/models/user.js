@@ -1,6 +1,7 @@
 let mongoose = require('mongoose')
 let Schema = mongoose.Schema
 let ObjectId = Schema.Types.ObjectId
+let Models = require('../config/constants').models
 let bcrypt = require('bcryptjs')
 const SALT_FACTOR = 10
 
@@ -18,7 +19,7 @@ let schema = new Schema({
   username: { type: String, required: true },
   agreement: { type: Boolean, required: true },
   foundingMember: { type: Boolean, required: true, default: false },
-  messages: { type: Array, default: [] },
+  conversations: { type: Object, default: {} },
   friends: { type: Array, default: [] },
   parties: { type: Array, default: [] },
   bars: { type: Array, default: [] },
@@ -28,7 +29,8 @@ let schema = new Schema({
   status: { type: String, default: '' },
   drunkLevel: { type: Number, default: 0 },
   preferences: { type: Object, default: {} },
-  activityFeed: { type: Array, default: [] }
+  activityFeed: { type: Array, default: [] },
+  requests: { type: [ObjectId], ref: Models.user.name, default: [] }
 })
 
 

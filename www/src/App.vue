@@ -1,6 +1,6 @@
 <template>
-  <v-app id="example-2" dark toolbar>
-    <v-navigation-drawer v-if="loggedIn" temporary v-model="drawer" dark overflow absolute>
+  <v-app id="app" dark toolbar>
+    <v-navigation-drawer v-if="loggedIn" temporary v-model="drawer" dark overflow fixed>
       <v-list class="pa-1">
         <v-list-tile avatar>
           <v-list-tile-avatar>
@@ -71,7 +71,7 @@
         items: [
           { icon: 'person_pin', title: 'Me', routerLink: '/' },
           { icon: 'local_bar', title: 'My Bars & Alcohol', routerLink: '/Alcohol' },
-          { icon: 'group', title: 'Friends', routerLink: '/Alcohol' },
+          { icon: 'group', title: 'Friends', routerLink: '/Friends' },
           { icon: 'mail', title: 'Messages', routerLink: '/Alcohol' },
           { icon: 'weekend', title: 'Party', routerLink: '/Alcohol' },
           { icon: 'settings', title: 'Settings', routerLink: '/Alcohol' }
@@ -93,6 +93,17 @@
   * strong {
     font-weight: 700 !important;
     color: #c2185b;
+  }
+
+  #app {
+    background-position: fixed !important;
+    background-size: cover !important;
+    overflow-y: scroll !important;
+    -webkit-scrollbar-width: 0;
+  }
+
+   #app::-webkit-scrollbar {
+    display: none;
   }
 </style>
 
