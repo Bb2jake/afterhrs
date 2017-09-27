@@ -4,7 +4,7 @@
       <v-list class="pa-1">
         <v-list-tile avatar>
           <v-list-tile-avatar>
-            <img src="https://i.imgur.com/MRc9ibg.jpg" />
+            <img src="http://www.ala-access.com/s/wp-content/uploads/2016/01/analyst-placeholder-avatar.png" />
           </v-list-tile-avatar>
           <v-list-tile-content>
             <v-list-tile-title>Current User</v-list-tile-title>

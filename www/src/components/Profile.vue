@@ -9,7 +9,7 @@
               <v-flex xs5>
                 <v-card-media height="30vh" contain>
                   <v-avatar size="125">
-                    <img src="https://i.imgur.com/MRc9ibg.jpg" alt="Profile Pic">
+                    <img src="http://www.ala-access.com/s/wp-content/uploads/2016/01/analyst-placeholder-avatar.png" alt="Profile Pic">
                   </v-avatar>
                 </v-card-media>
               </v-flex>
