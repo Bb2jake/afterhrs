@@ -71,7 +71,7 @@
                                         <v-icon>do_not_disturb</v-icon>
                                     </v-btn>
                                 </v-layout>
-                                {{ request }}
+                                {{ request.username }}
                             </template>
                         </v-list>
                     </v-container>
@@ -91,7 +91,8 @@
             }
         },
         mounted() {
-            
+            // FIXME: Not where this should go, just a way to test
+            this.getUsernamesById();
         },
         computed: {
             results() {
@@ -101,11 +102,11 @@
             activeUser() {
                 return this.$store.state.activeUser
             },
+            // requests() {
+            //     return this.$store.state.activeUser.requests
+            // },
             requests() {
-                return this.$store.state.activeUser.requests
-            },
-            requestUsernames() {
-                return this.$store.state.requestUsernames
+                return this.$store.state.requests
             }
         },
         methods: {
