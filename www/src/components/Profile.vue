@@ -15,20 +15,23 @@
               </v-flex>
               <v-flex xs7>
                 <div>
-                  <div class="headline pink--text text--darken-2"><strong>{{ activeUser.username }}</strong></div>
+                  <div class="headline pink--text text--darken-2">
+                    <strong>{{ activeUser.username }}</strong>
+                  </div>
                   <div>{{ activeUser.firstname }} {{ activeUser.lastname }}</div>
                   <v-divider></v-divider>
                   <div class="grey--text">Drunk Level: {{ activeUser.drunkLevel }}</div>
                   <div v-if="activeUser.isDrinking">
                     <img :src="`http://assets.absolutdrinks.com/drinks/transparent-background-white/soft-shadow/floor-reflection/75x150/${activeUser.isDrinking.id}.png`">
-                    <div class="grey--text">Drinking a {{ activeUser.isDrinking.name }} as of {{ Math.floor((currentTime - activeUser.isDrinking.timeConsumed)*.00001) }} min ago.</div>
+                    <div class="grey--text">Drinking a {{ activeUser.isDrinking.name }} as of {{ Math.floor((currentTime - activeUser.isDrinking.timeConsumed)*.00001)
+                      }} min ago.</div>
                   </div>
                 </div>
               </v-flex>
             </v-layout>
             <v-divider></v-divider>
             <v-layout row>
-              <v-flex xs6 >
+              <v-flex xs6>
                 <div class="grey--text">Friends: {{ activeUser.friends.length }}</div>
               </v-flex>
               <v-flex xs6>
@@ -73,7 +76,7 @@
 
       </v-flex>
       <v-flex v-if="loggedIn" xs12 sm4 class="drinks-list">
-        <v-card dark class="elevation-24">
+        <v-card dark class="elevation-24" style="margin-bottom: 5rem;">
           <v-container fluid grid-list-lg>
             <v-layout row>
               <v-flex xs12>
@@ -116,55 +119,61 @@
       </v-flex>
 
       <v-flex v-if="!loggedIn" xs12 sm6 offset-sm3>
-        <v-switch color="pink darken-2" label="Log In/Register" v-model="showRegister"></v-switch>
+        <v-container>
+
+          <v-switch color="pink darken-2" label="Log In/Register" v-model="showRegister"></v-switch>
 
 
-        <form v-if="!showRegister">
-          <h3>log in to <strong>after</strong>hrs</h3>
-          <v-text-field required type="text" placeholder="Username" v-model="accountUser.username"></v-text-field>
-          <v-text-field required type="password" placeholder="Password" v-model="accountUser.password"></v-text-field>
-          <v-btn class="pink darken-2" flat type="submit" @click="logUserIn()">Log Me In</v-btn>
-        </form>
+          <form v-if="!showRegister">
+            <h3>log in to
+              <strong>after</strong>hrs</h3>
+            <v-text-field required type="text" placeholder="Username" v-model="accountUser.username"></v-text-field>
+            <v-text-field required type="password" placeholder="Password" v-model="accountUser.password"></v-text-field>
+            <v-btn class="pink darken-2" flat type="submit" @click="logUserIn()">Log Me In</v-btn>
+          </form>
 
 
-        <form v-if="showRegister">
-          <!-- REGISTER -->
-          <h3>join the <strong>party</strong></h3>
-          <v-text-field required type="text" placeholder="First Name" v-model="newUser.firstname"></v-text-field>
-          <v-text-field required type="text" placeholder="Last Name" v-model="newUser.lastname"></v-text-field>
-          <!-- DATE OF BIRTH PICKER -->
-          <v-flex xs12 sm6>
-            <v-menu lazy :close-on-content-click="false" v-model="menu" transition="scale-transition" offset-y full-width :nudge-left="40"
-              max-width="290px">
-              <v-text-field required slot="activator" v-model="newUser.dob" placeholder="Date of Birth"></v-text-field>
-              <v-date-picker v-model="newUser.dob" no-title scrollable actions>
-                <template scope="{ save, cancel }">
-                  <v-card-actions>
-                    <v-btn flat primary @click.native="cancel()">Cancel</v-btn>
-                    <v-btn flat primary @click.native="save()">Save</v-btn>
-                  </v-card-actions>
-                </template>
-              </v-date-picker>
-            </v-menu>
-          </v-flex>
-          <!-- END DOB PICKER -->
-          I am a:
-          <v-select required v-bind:items="genders" v-model="newUser.gender" label="Select" single-line bottom></v-select>
-          <v-text-field required type="text" placeholder="City" v-model="newUser.city"></v-text-field>
-          <v-select required v-bind:items="continentalStates" v-model="newUser.continentalState" label="State" single-line bottom></v-select>
-          <v-text-field required type="text" placeholder="ZIP" v-model="newUser.zipCode"></v-text-field>
-          <v-divider></v-divider>
-          <p>By registering for this site, I hereby certify that I am at least 21 years of age or older. I also agree to let
-            "afterhrs" use the personal information submitted during registration for purposes related directly to the functionality
-            of the application.</p>
-          <v-switch color="pink darken-2" label="I hereby certify and agree" v-model="newUser.agreement"></v-switch>
-          <v-divider></v-divider>
-          <v-text-field required type="text" placeholder="Username" v-model="newUser.username"></v-text-field>
-          <v-text-field required type="text" placeholder="email" v-model="newUser.email"></v-text-field>
-          <v-text-field required type="password" placeholder="Password" v-model="newUser.password"></v-text-field>
-          <v-text-field required type="password" placeholder="Confirm Password" v-model="confirmPassword"></v-text-field>
-          <v-btn class="pink darken-2" flat type="submit" @click="registerNewUser()">Register Me</v-btn>
-        </form>
+          <form v-if="showRegister">
+            <!-- REGISTER -->
+            <h3>join the
+              <strong>party</strong>
+            </h3>
+            <v-text-field required type="text" placeholder="First Name" v-model="newUser.firstname"></v-text-field>
+            <v-text-field required type="text" placeholder="Last Name" v-model="newUser.lastname"></v-text-field>
+            <!-- DATE OF BIRTH PICKER -->
+            <v-flex xs12 sm6>
+              <v-menu lazy :close-on-content-click="false" v-model="menu" transition="scale-transition" offset-y full-width :nudge-left="40"
+                max-width="290px">
+                <v-text-field required slot="activator" v-model="newUser.dob" placeholder="Date of Birth"></v-text-field>
+                <v-date-picker v-model="newUser.dob" no-title scrollable actions>
+                  <template scope="{ save, cancel }">
+                    <v-card-actions>
+                      <v-btn flat primary @click.native="cancel()">Cancel</v-btn>
+                      <v-btn flat primary @click.native="save()">Save</v-btn>
+                    </v-card-actions>
+                  </template>
+                </v-date-picker>
+              </v-menu>
+            </v-flex>
+            <!-- END DOB PICKER -->
+            I am a:
+            <v-select required v-bind:items="genders" v-model="newUser.gender" label="Select" single-line bottom></v-select>
+            <v-text-field required type="text" placeholder="City" v-model="newUser.city"></v-text-field>
+            <v-select required v-bind:items="continentalStates" v-model="newUser.continentalState" label="State" single-line bottom></v-select>
+            <v-text-field required type="text" placeholder="ZIP" v-model="newUser.zipCode"></v-text-field>
+            <v-divider></v-divider>
+            <p>By registering for this site, I hereby certify that I am at least 21 years of age or older. I also agree to let
+              "afterhrs" use the personal information submitted during registration for purposes related directly to the
+              functionality of the application.</p>
+            <v-switch color="pink darken-2" label="I hereby certify and agree" v-model="newUser.agreement"></v-switch>
+            <v-divider></v-divider>
+            <v-text-field required type="text" placeholder="Username" v-model="newUser.username"></v-text-field>
+            <v-text-field required type="text" placeholder="email" v-model="newUser.email"></v-text-field>
+            <v-text-field required type="password" placeholder="Password" v-model="newUser.password"></v-text-field>
+            <v-text-field required type="password" placeholder="Confirm Password" v-model="confirmPassword"></v-text-field>
+            <v-btn class="pink darken-2" flat type="submit" @click="registerNewUser()">Register Me</v-btn>
+          </form>
+        </v-container>
 
       </v-flex>
     </v-layout>

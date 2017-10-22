@@ -52,9 +52,10 @@
                     </v-flex>
                 </v-flex>
             </v-layout>
-
+            <v-divider></v-divider>
+            <h3>Requests</h3>
             <v-flex xs12 sm6>
-                <v-card dark class="zoomIn white--text mb-3 elevation-24">
+                <v-card v-for="request in requests" dark class="zoomIn white--text mb-3 elevation-24">
                     <v-container fluid grid-list-lg>
                         <v-list two-line>
                             <template>
@@ -62,7 +63,7 @@
                                     <v-avatar>
                                         <img src="http://www.ala-access.com/s/wp-content/uploads/2016/01/analyst-placeholder-avatar.png">
                                     </v-avatar>
-                                    <v-btn flat large class="green darken-2 btn">
+                                    <v-btn flat large class="green darken-2 btn" @click="accept(request)">
                                         <v-icon>check</v-icon>
                                     </v-btn>
 
@@ -70,7 +71,7 @@
                                         <v-icon>do_not_disturb</v-icon>
                                     </v-btn>
                                 </v-layout>
-                                Username
+                                {{ request }}
                             </template>
                         </v-list>
                     </v-container>
@@ -89,6 +90,9 @@
                 querySelector: ''
             }
         },
+        mounted() {
+            
+        },
         computed: {
             results() {
                 return Object.freeze(this.$store.state.userSearchResults)
@@ -96,6 +100,12 @@
             },
             activeUser() {
                 return this.$store.state.activeUser
+            },
+            requests() {
+                return this.$store.state.activeUser.requests
+            },
+            requestUsernames() {
+                return this.$store.state.requestUsernames
             }
         },
         methods: {
@@ -105,13 +115,33 @@
                 query.input = this.query
                 this.$store.dispatch('searchUsers', query);
             },
+            getUsernamesById() {
+                var query = {}
+                query.querySelector = '._id'
+                query.input = this.query
+                this.$store.dispatch('getUsernamesById', query);
+            },
             addFriend(selectedUser) {
                 var user = selectedUser
                 var request = {}
+                request.firstName = user.firstName
+                request.lastName = user.lastName
+                request.username = user.userName
                 request.Receiver = user._id
                 request.Sender = this.activeUser._id
                 user.request = request
                 this.$store.dispatch("modifyFriendship", user);
+            },
+            accept(friend) {
+                // var request = {}
+                // request.Receiver = this.activeUser._id
+                // var user = this.activeUser
+                // user.request = request
+                // user.friends.push(friend)
+                // this.$store.dispatch("modifyFriendship", user);
+            },
+            decline() {
+
             }
         },
     }

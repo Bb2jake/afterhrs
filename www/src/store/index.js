@@ -31,7 +31,8 @@ var store = new vuex.Store({
         loggedIn: false,
         results: [],
         resultImgUrl: '',
-        userSearchResults: []
+        userSearchResults: [],
+        requestUsernames: []
 
     },
     mutations: {
@@ -61,6 +62,9 @@ var store = new vuex.Store({
         },
         setUserSearchResults(state, data) {
             state.userSearchResults = data.data.data
+        },
+        setRequestUsernames(state, data){
+            state.requestUsernames.push(data)
         }
     },
     actions: {
@@ -107,6 +111,15 @@ var store = new vuex.Store({
             api('users?querySelector=' + query.querySelector + '&input=' + query.input)
                 .then(res => {
                     commit('setUserSearchResults', res)
+                })
+                .catch(err => {
+                    commit('handleError', err)
+                })
+        },
+        getUsernamesById({ commit, dispatch }, query) {
+            api('users?querySelector=' + query.querySelector + '&input=' + query.input)
+                .then(res => {
+                    commit('setRequestUsernames', res)
                 })
                 .catch(err => {
                     commit('handleError', err)
