@@ -72,7 +72,7 @@
         </v-card>
 
       </v-flex>
-      <v-flex v-if="loggedIn" xs12 sm4 offset-sm1 class="drinks-list">
+      <v-flex v-if="loggedIn" xs12 sm4 class="drinks-list">
         <v-card dark class="elevation-24">
           <v-container fluid grid-list-lg>
             <v-layout row>
@@ -344,6 +344,7 @@
       drinkOne(drink) {
         var user = this.$store.state.activeUser;
         var now = new Date().getTime();
+        delete user.password
         drink.timeConsumed = now
         user.isDrinking = drink;
         user.drunkLevel++
@@ -351,6 +352,7 @@
       },
       removeDrink(index) {
         var user = this.$store.state.activeUser;
+        delete user.password
         user.drinks.splice(index, 1);
         this.$store.dispatch("updateUser", user);
       }

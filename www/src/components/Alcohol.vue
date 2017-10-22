@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div>
     <div class="row text-center">
 
 
@@ -71,6 +71,7 @@
       },
       addToMyDrinks(drink) {
         var user = this.$store.state.activeUser;
+        delete user.password
         user.drinks.push(drink)
         this.$store.dispatch("updateUser", user);
       }
