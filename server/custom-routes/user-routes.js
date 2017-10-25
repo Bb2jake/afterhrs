@@ -49,19 +49,27 @@ module.exports = {
         }
     },
 
-    populateFriendRequests: {
+    searchUsers: {
         path: '/users',
         reqType: 'get',
         method(req, res, next) {
+            let action = 'Search users'
+            let querySelector = req.query.querySelector
+            let search = req.query.input
+              Users.find({ [querySelector]: search }).select('username firstname lastname _id')
+                .then(users => {
+                  res.send(handleResponse(action, users))//send updated user info to store
+                }).catch(error => {
+                  return next(handleResponse(action, null, error))
+                })
+        }
+    },
+
+    populateFriendRequests: {
+        path: '/user/requests',
+        reqType: 'get',
+        method(req, res, next) {
             let action = 'Populate friend requests'
-            // let querySelector = req.query.querySelector
-            // let search = req.query.input
-            //   Users.find({ [querySelector]: search }).select('username firstname lastname _id')
-            //     .then(users => {
-            //       res.send(handleResponse(action, users))//send updated user info to store
-            //     }).catch(error => {
-            //       return next(handleResponse(action, null, error))
-            //     })
             Users.findById(req.session.uid).populate({ path: 'requests', select: 'username firstname lastname _id' })
                 .then(user => {
                     res.send(handleResponse(action, user.requests))

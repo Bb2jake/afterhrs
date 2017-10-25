@@ -115,8 +115,8 @@ var store = new vuex.Store({
                     commit('handleError', err)
                 })
         },
-        getUsernamesById({ commit, dispatch }, query) {
-            api('users?querySelector=' + query.querySelector + '&input=' + query.input)
+        getFriendRequests({ commit, dispatch }) {
+            api('user/requests')
                 .then(res => {
                     commit('setRequestUsernames', res.data.data)
                 })

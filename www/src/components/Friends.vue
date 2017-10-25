@@ -92,7 +92,7 @@
         },
         mounted() {
             // FIXME: Not where this should go, just a way to test
-            this.getUsernamesById();
+            this.getFriendRequests();
         },
         computed: {
             results() {
@@ -116,11 +116,8 @@
                 query.input = this.query
                 this.$store.dispatch('searchUsers', query);
             },
-            getUsernamesById() {
-                var query = {}
-                query.querySelector = '._id'
-                query.input = this.query
-                this.$store.dispatch('getUsernamesById', query);
+            getFriendRequests() {
+                this.$store.dispatch('getFriendRequests');
             },
             addFriend(selectedUser) {
                 var user = selectedUser
