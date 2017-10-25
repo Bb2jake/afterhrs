@@ -5,15 +5,15 @@
 
             <v-flex xs12 sm6>
                 <v-card dark class="zoomIn white--text mb-3 elevation-24">
-                    <v-container fluid grid-list-lg>
+                    <v-container fluid grid-list-md>
                         <v-layout row>
-                            <v-flex xs6>
+                            <v-flex xs7>
                                 <form v-on:submit.prevent="searchUsers">
                                     <v-text-field type="text" placeholder="Find someone..." v-model="query"></v-text-field>
-                                    <v-btn class="btn" type="submit">Search</v-btn>
+                                    <v-btn small class="btn" type="submit">Search</v-btn>
                                 </form>
                             </v-flex>
-                            <v-flex xs6>
+                            <v-flex xs5>
                                 <v-radio-group v-model="querySelector" :mandatory="true">
                                     <v-radio label="Username" value="username"></v-radio>
                                     <v-radio label="Name" value="firstname"></v-radio>
@@ -53,29 +53,29 @@
                 </v-flex>
             </v-layout>
             <v-divider></v-divider>
-            <h3>Requests</h3>
-            <v-flex xs12 sm6>
-                <v-card v-for="request in requests" dark class="zoomIn white--text mb-3 elevation-24">
-                    <v-container fluid grid-list-lg>
-                        <v-list two-line>
-                            <template>
-                                <v-layout row>
-                                    <v-avatar>
-                                        <img src="http://www.ala-access.com/s/wp-content/uploads/2016/01/analyst-placeholder-avatar.png">
-                                    </v-avatar>
-                                    <v-btn flat large class="green darken-2 btn" @click="accept(request)">
-                                        <v-icon>check</v-icon>
-                                    </v-btn>
-
-                                    <v-btn flat large class="red darken-2 btn">
-                                        <v-icon>do_not_disturb</v-icon>
-                                    </v-btn>
-                                </v-layout>
-                                {{ request.username }}
-                            </template>
-                        </v-list>
-                    </v-container>
-                </v-card>
+            <h4>Requests</h4>
+            <v-flex xs12 sm6 class="mb-5">
+                <v-list class="zoomIn">
+                    <v-list-tile avatar v-for="request in requests" @click="">
+                        <v-list-tile-avatar>
+                            <img src="http://www.ala-access.com/s/wp-content/uploads/2016/01/analyst-placeholder-avatar.png" />
+                        </v-list-tile-avatar>
+                        <v-list-tile-content>
+                            <v-list-tile-title v-text="request.username"></v-list-tile-title>
+                        </v-list-tile-content>
+                        <v-list-tile-action>
+                            <v-btn icon flat @click="accept(request)">
+                                <v-icon class="green--text">check</v-icon>
+                            </v-btn>
+                        </v-list-tile-action>
+                        <v-list-tile-action>
+                            <v-btn icon flat>
+                                <v-icon class="red--text">not_interested</v-icon>
+                            </v-btn>
+                        </v-list-tile-action>
+                        <v-divider></v-divider>
+                    </v-list-tile>
+                </v-list>
             </v-flex>
 
         </div>
@@ -133,16 +133,18 @@
                 user.request = request
                 this.$store.dispatch("modifyFriendship", user);
             },
-            accept(friend) {
-                // var request = {}
-                // request.Receiver = this.activeUser._id
-                // var user = this.activeUser
-                // user.request = request
-                // user.friends.push(friend)
-                // this.$store.dispatch("modifyFriendship", user);
+            accept(request) {
+                var user = this.$store.state.activeUser;
+                delete user.password
+                user.friends.push(request)
+                user.requests.splice(request, 1);
+                this.$store.dispatch("updateUser", user);
             },
             decline() {
-
+                var user = this.$store.state.activeUser;
+                delete user.password
+                user.requests.splice(request, 1);
+                this.$store.dispatch("updateUser", user);
             }
         },
     }

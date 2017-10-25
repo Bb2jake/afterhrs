@@ -56,13 +56,13 @@
 
                 <v-list two-line>
                   <template>
-                    <v-list-tile avatar @click="" download>
+                    <v-list-tile avatar @click="" download v-for="friend in friends">
                       <v-list-tile-avatar>
                         <img src="http://www.ala-access.com/s/wp-content/uploads/2016/01/analyst-placeholder-avatar.png">
                       </v-list-tile-avatar>
                       <v-list-tile-content>
-                        <v-list-tile-title>Username</v-list-tile-title>
-                        <v-list-tile-sub-title>First, Last</v-list-tile-sub-title>
+                        <v-list-tile-title>{{friend.username}}</v-list-tile-title>
+                        <v-list-tile-sub-title>{{friend.firstname}} {{friend.lastname}}</v-list-tile-sub-title>
                       </v-list-tile-content>
                     </v-list-tile>
                   </template>
@@ -284,6 +284,9 @@
       },
       activeUser() {
         return this.$store.state.activeUser;
+      },
+      friends() {
+        return this.$store.state.activeUser.friends
       },
       currentDate() {
         Date.prototype.yyyymmdd = function () {

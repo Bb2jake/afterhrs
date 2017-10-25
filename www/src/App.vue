@@ -54,7 +54,7 @@
         items: [
           { icon: 'person_pin', title: 'Me', routerLink: '/' },
           { icon: 'local_bar', title: 'Drinks', routerLink: '/Alcohol' },
-          { icon: 'group', title: 'Friends', routerLink: '/Friends' },
+          { icon: 'group', title: 'Friends', routerLink: '/Friends'},
           { icon: 'mail', title: 'Messaging', routerLink: '/Alcohol' },
           // { icon: 'weekend', title: 'Party', routerLink: '/Alcohol' },
           // { icon: 'settings', title: 'Settings', routerLink: '/Alcohol' }
